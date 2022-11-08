@@ -35,11 +35,11 @@ LCTL_T(KC_LCTL),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                     
 
   [1] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX,  KC_UP,  XXXXXXX, XXXXXXX, XXXXXXX,
+      KC_ESC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX,  KC_UP,  XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      LCTL(KC_F), LCTL(KC_Z), KC_LSFT, KC_LALT, KC_LGUI, XXXXXXX,                      XXXXXXX, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,
+      LGUI(KC_F), LGUI(KC_Z), KC_LSFT, KC_LALT, KC_LGUI, XXXXXXX,         XXXXXXX, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_BRID, KC_BRIU, LCTL(KC_X), LCTL(KC_V), LCTL(KC_C), KC_KB_VOLUME_DOWN,            KC_KB_VOLUME_UP, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
+      KC_BRID, KC_BRIU, LGUI(KC_X), LGUI(KC_V), LGUI(KC_C), KC_KB_VOLUME_DOWN,            KC_KB_VOLUME_UP, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_SPC,   MO(4), KC_RALT
                                       //`--------------------------'  `--------------------------'
