@@ -47,9 +47,9 @@ LCTL_T(KC_LCTL),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                     
 
   [2] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, KC_EXLM,  KC_AT,  KC_LPRN,  KC_RPRN, KC_PERC,                     KC_EQL,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_BSPC,
+      XXXXXXX, KC_EXLM,  KC_AT,  KC_LPRN,  KC_RPRN, KC_PERC,                     KC_EQL,  KC_PPLS, KC_PMNS, KC_PAST, KC_NO,   KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, KC_LCBR, KC_RCBR, XXXXXXX,                      KC_EXLM, KC_HASH, KC_SLSH, KC_BSLS, KC_PIPE, KC_DLR,
+      KC_CAPS, XXXXXXX, XXXXXXX, KC_LCBR, KC_RCBR, XXXXXXX,                      KC_EXLM, KC_HASH, KC_SLSH, KC_BSLS, KC_PIPE, KC_DLR,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, XXXXXXX,                      XXXXXXX, KC_GRV,  KC_CIRC, KC_AT,   KC_AMPR, KC_TILD,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -100,7 +100,7 @@ void oled_render_layer_state(void) {
     oled_write_P(PSTR("Layer: "), false);
     switch (layer_state) {
         case L_DVORAK:
-            oled_write_ln_P(PSTR("Dvorak ;)"), false);
+            oled_write_ln_P(PSTR("Dvorak"), false);
             break;
         case L_NAVIGATE:
             oled_write_ln_P(PSTR("Navigate"), false);
@@ -111,13 +111,8 @@ void oled_render_layer_state(void) {
         case L_NUMPAD:
             oled_write_ln_P(PSTR("Numpad"), false);
             break;
-        case L_ADJUST:
+        default:
             oled_write_ln_P(PSTR("Adjust"), false);
-            break;
-        case L_NUMPAD|L_NAVIGATE:
-        case L_NUMPAD|L_SYMBOLS:
-        case L_NUMPAD|L_NAVIGATE|L_SYMBOLS|L_ADJUST:
-            oled_write_ln_P(PSTR("Others"), false);
             break;
     }
 }
