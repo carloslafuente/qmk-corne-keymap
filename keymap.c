@@ -26,7 +26,7 @@ LT(3, KC_TAB),  KC_Q,  KC_W,  KC_E,  KC_R,  KC_T,                         KC_Y, 
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
 LCTL_T(KC_LCTL),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                       KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,   KC_QUOT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,  KC_Z,  KC_X,    KC_C,    KC_V,    KC_B,                        KC_N,    KC_M,    KC_COMM,    KC_DOT,   KC_SLASH,   KC_RSFT,
+      KC_LSFT,  KC_Z,  KC_X,    KC_C,    KC_V,    KC_B,                        KC_N,    KC_M,    KC_COMM,    KC_DOT,   KC_SLASH,   KC_MINS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI,   MO(1),  KC_SPC,     KC_SPC,   LT(2, KC_ENT), KC_RALT
                                       //`--------------------------'  `--------------------------'
@@ -37,9 +37,9 @@ LCTL_T(KC_LCTL),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_ESC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX,  KC_UP,  XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      LGUI(KC_F), LGUI(KC_Z), KC_LSFT, KC_LALT, KC_LGUI, XXXXXXX,         XXXXXXX, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,
+      LGUI(KC_Z), LGUI(KC_F), KC_LSFT, KC_LALT, KC_LGUI, XXXXXXX,         XXXXXXX, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_BRID, KC_BRIU, LGUI(KC_X), LGUI(KC_V), LGUI(KC_C), KC_KB_VOLUME_DOWN,            KC_KB_VOLUME_UP, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
+      KC_BRID, KC_BRIU, LGUI(KC_X), LGUI(KC_C), LGUI(KC_V), KC_KB_VOLUME_DOWN,            KC_KB_VOLUME_UP, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_SPC,   MO(4), KC_RALT
                                       //`--------------------------'  `--------------------------'
