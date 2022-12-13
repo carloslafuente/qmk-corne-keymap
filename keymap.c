@@ -59,11 +59,11 @@ LCTL_T(KC_LCTL),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                     
 
   [3] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_PLUS, KC_1, KC_2, KC_3, KC_MINS, XXXXXXX,
+      XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F4,  XXXXXXX,                       KC_PLUS, KC_1,    KC_2,    KC_3,    KC_MINS, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_PAST, KC_4, KC_5, KC_6, KC_SLSH, XXXXXXX,
+      XXXXXXX, KC_F5,   KC_F6,   KC_F7,   KC_F8,  XXXXXXX,                       KC_PAST, KC_4,    KC_5,    KC_6,    KC_SLSH, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_7, KC_8, KC_9, KC_0, XXXXXXX,
+      XXXXXXX, KC_F9,   KC_F10,  KC_F11,  KC_F12, XXXXXXX,                       XXXXXXX, KC_7,    KC_8,    KC_9,    KC_0,    XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_SPC, _______, KC_RALT
                                       //`--------------------------'  `--------------------------'
@@ -71,7 +71,7 @@ LCTL_T(KC_LCTL),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                     
 
   [4] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-        QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -100,7 +100,7 @@ void oled_render_layer_state(void) {
     oled_write_P(PSTR("Layer: "), false);
     switch (layer_state) {
         case L_DVORAK:
-            oled_write_ln_P(PSTR("Dvorak"), false);
+            oled_write_ln_P(PSTR("Dvorak ;)"), false);
             break;
         case L_NAVIGATE:
             oled_write_ln_P(PSTR("Navigate"), false);
@@ -111,10 +111,13 @@ void oled_render_layer_state(void) {
         case L_NUMPAD:
             oled_write_ln_P(PSTR("Numpad"), false);
             break;
+        case L_ADJUST:
+            oled_write_ln_P(PSTR("Adjust"), false);
+            break;
         case L_NUMPAD|L_NAVIGATE:
         case L_NUMPAD|L_SYMBOLS:
-        case L_NUMPAD|L_NAVIGATE|L_SYMBOLS:
-            oled_write_ln_P(PSTR("Adjust"), false);
+        case L_NUMPAD|L_NAVIGATE|L_SYMBOLS|L_ADJUST:
+            oled_write_ln_P(PSTR("Others"), false);
             break;
     }
 }
