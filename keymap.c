@@ -18,6 +18,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include <stdio.h>
+#include "os_detection.h"
+
+enum custom_keycodes {
+  CU_FIND = SAFE_RANGE,
+  CU_UNDO,
+  CU_CUT,
+  CU_COPY,
+  CU_PASTE,
+  CU_TOGOS,
+};
+
+enum os_override {
+  OS_OVERRIDE_AUTO = 0,
+  OS_OVERRIDE_MAC,
+  OS_OVERRIDE_LINUX,
+};
+
+typedef union {
+  uint32_t raw;
+  struct {
+    uint8_t os_override :2;
+  };
+} user_config_t;
+
+user_config_t user_config;
+
+void keyboard_post_init_user(void) {
+  user_config.raw = eeconfig_read_user();
+}
+
+bool is_mac_mode(void) {
+  switch (user_config.os_override) {
+    case OS_OVERRIDE_MAC:
+      return true;
+    case OS_OVERRIDE_LINUX:
+      return false;
+    default:
+      return detected_host_os() == OS_MACOS || detected_host_os() == OS_IOS;
+  }
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
@@ -37,9 +77,9 @@ LCTL_T(KC_LCTL),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                     
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_ESC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX,  KC_UP,  XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      LGUI(KC_F), LGUI(KC_Z), KC_LSFT, KC_LALT, KC_LGUI, XXXXXXX,         XXXXXXX, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,
+      CU_FIND, CU_UNDO, KC_LSFT, KC_LALT, KC_LGUI, XXXXXXX,         XXXXXXX, KC_LEFT, KC_DOWN, KC_RIGHT, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_BRID, KC_BRIU, LGUI(KC_X), LGUI(KC_V), LGUI(KC_C), KC_KB_VOLUME_DOWN,            KC_KB_VOLUME_UP, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
+      KC_BRID, KC_BRIU, CU_CUT, CU_PASTE, CU_COPY, KC_KB_VOLUME_DOWN,            KC_KB_VOLUME_UP, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_SPC,   MO(4), KC_RALT
                                       //`--------------------------'  `--------------------------'
@@ -71,11 +111,11 @@ LCTL_T(KC_LCTL),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                     
 
   [4] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      QK_BOOT, CU_TOGOS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      UG_TOGG, UG_HUEU, UG_SATU, UG_VALU, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      UG_NEXT, UG_HUED, UG_SATD, UG_VALD, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
                                       //`--------------------------'  `--------------------------'
@@ -117,6 +157,25 @@ void oled_render_layer_state(void) {
     }
 }
 
+void oled_render_os_mode(void) {
+    oled_write_P(PSTR("OS: "), false);
+    switch (user_config.os_override) {
+        case OS_OVERRIDE_MAC:
+            oled_write_ln_P(PSTR("Mac (forced)"), false);
+            break;
+        case OS_OVERRIDE_LINUX:
+            oled_write_ln_P(PSTR("Linux (forced)"), false);
+            break;
+        default:
+            if (is_mac_mode()) {
+                oled_write_ln_P(PSTR("Mac (auto)"), false);
+            } else {
+                oled_write_ln_P(PSTR("Linux (auto)"), false);
+            }
+            break;
+    }
+}
+
 
 char keylog_str[24] = {};
 
@@ -146,44 +205,55 @@ void oled_render_keylog(void) {
     oled_write(keylog_str, false);
 }
 
-void render_bootmagic_status(bool status) {
-    /* Show Ctrl-Gui Swap options */
-    static const char PROGMEM logo[][2][3] = {
-        {{0x97, 0x98, 0}, {0xb7, 0xb8, 0}},
-        {{0x95, 0x96, 0}, {0xb5, 0xb6, 0}},
-    };
-    if (status) {
-        oled_write_ln_P(logo[0][0], false);
-        oled_write_ln_P(logo[0][1], false);
-    } else {
-        oled_write_ln_P(logo[1][0], false);
-        oled_write_ln_P(logo[1][1], false);
-    }
-}
-
-void oled_render_logo(void) {
-    static const char PROGMEM crkbd_logo[] = {
-        0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94,
-        0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4,
-        0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
-        0};
-    oled_write_P(crkbd_logo, false);
-}
-
 bool oled_task_user(void) {
+    oled_render_layer_state();
     if (is_keyboard_master()) {
-        oled_render_layer_state();
+        oled_render_os_mode();
         oled_render_keylog();
-    } else {
-        oled_render_logo();
     }
     return false;
 }
+#endif // OLED_ENABLE
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+#ifdef OLED_ENABLE
   if (record->event.pressed) {
     set_keylog(keycode, record);
   }
+#endif
+
+  switch (keycode) {
+    case CU_FIND:
+      if (record->event.pressed) {
+        tap_code16(is_mac_mode() ? LGUI(KC_F) : LCTL(KC_F));
+      }
+      return false;
+    case CU_UNDO:
+      if (record->event.pressed) {
+        tap_code16(is_mac_mode() ? LGUI(KC_Z) : LCTL(KC_Z));
+      }
+      return false;
+    case CU_CUT:
+      if (record->event.pressed) {
+        tap_code16(is_mac_mode() ? LGUI(KC_X) : LCTL(KC_X));
+      }
+      return false;
+    case CU_COPY:
+      if (record->event.pressed) {
+        tap_code16(is_mac_mode() ? LGUI(KC_C) : LCTL(KC_C));
+      }
+      return false;
+    case CU_PASTE:
+      if (record->event.pressed) {
+        tap_code16(is_mac_mode() ? LGUI(KC_V) : LCTL(KC_V));
+      }
+      return false;
+    case CU_TOGOS:
+      if (record->event.pressed) {
+        user_config.os_override = (user_config.os_override + 1) % 3;
+        eeconfig_update_user(user_config.raw);
+      }
+      return false;
+  }
   return true;
 }
-#endif // OLED_ENABLE
